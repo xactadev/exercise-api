@@ -1,7 +1,10 @@
+const http = require('http');
 const express = require('express')
+const cors = require('cors');
 const fs = require('fs')
 
 const app = express()
+app.use(cors());
 
 //this line is required to parse the request body
 app.use(express.json())
@@ -107,8 +110,11 @@ const getContactData = () => {
 
 /* util functions ends */
 
+const port = process.env.PORT ? process.env.PORT : 3000;
+const server = http.createServer(app);
 
 //configure the server port
-app.listen(3000, () => {
-    console.log('Server runs on port 3000')
-})
+server.listen(port, () => {
+    console.log("listening on port " + port);
+});
+
