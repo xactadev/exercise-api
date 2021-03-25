@@ -1,10 +1,10 @@
 const express = require('express')
-const serverless = require('serverless-http');
 const fs = require('fs')
-const app = express()
-const bodyParser = require('body-parser');
 
-app.use(bodyParser);
+const app = express()
+
+//this line is required to parse the request body
+app.use(express.json())
 
 /* Create - POST method */
 app.post('/contact/add', (req, res) => {
@@ -105,4 +105,10 @@ const getContactData = () => {
     return JSON.parse(jsonData)
 }
 
-module.exports.handler = serverless(app);
+/* util functions ends */
+
+
+//configure the server port
+app.listen(3000, () => {
+    console.log('Server runs on port 3000')
+})
