@@ -10,101 +10,101 @@ app.use(cors());
 app.use(express.json())
 
 /* Create - POST method */
-app.post('/contact/add', (req, res) => {
-    //get the existing contact data
-    const existContacts = getContactData()
+app.post('/employee/add', (req, res) => {
+    //get the existing employee data
+    const existEmployees = getEmployeeData()
 
-    //get the new contact data from post request
-    const contactData = req.body
+    //get the new employee data from post request
+    const employeeData = req.body
 
-    //check if the contactData fields are missing
-    if (contactData.firstName == null || contactData.lastName == null || contactData.mobile == null || contactData.email == null) {
+    //check if the employeeData fields are missing
+    if (employeeData.firstName == null || employeeData.lastName == null || employeeData.id == null || employeeData.email == null) {
         return res.status(401).send({error: true, msg: 'Data missing'})
     }
 
-    //check if the contactName exist already
-    const findExist = existContacts.find( contact => contact.mobile === contactData.mobile)
+    //check if the employeeName exist already
+    const findExist = existEmployees.find( employee => employee.id === employeeData.id)
     if (findExist) {
-        return res.status(409).send({error: true, msg: 'Contact already exist'})
+        return res.status(409).send({error: true, msg: 'Employee already exist.'})
     }
 
-    //append the contact data
-    existContacts.push(contactData)
+    //append the employee data
+    existEmployees.push(employeeData)
 
-    //save the new contact data
-    saveContactData(existContacts);
-    res.send({success: true, msg: 'Contact added successfully'})
+    //save the new employee data
+    saveEmployeeData(existEmployees);
+    res.send({success: true, msg: 'Employee added successfully.'})
 
 })
 
 /* Read - GET method */
-app.get('/contact/list', (req, res) => {
-    const contacts = getContactData()
-    res.send(contacts)
+app.get('/employee/list', (req, res) => {
+    const employees = getEmployeeData()
+    res.send(employees)
 })
 
 /* Update - Patch method */
-app.patch('/contact/update/:mobile', (req, res) => {
-    //get the contactname from url
-    const mobile = req.params.mobile
+app.patch('/employee/update/:id', (req, res) => {
+    //get the employee id from url
+    const id = req.params.id
 
     //get the update data
-    const contactData = req.body
+    const employeeData = req.body
 
-    //get the existing contact data
-    const existContacts = getContactData()
+    //get the existing employee data
+    const existEmployees = getEmployeeData()
 
-    //check if the mobile exist or not
-    const findExist = existContacts.find( contact => contact.mobile === mobile )
+    //check if the id exist or not
+    const findExist = existEmployees.find( employee => employee.id === id )
     if (!findExist) {
-        return res.status(409).send({error: true, msg: 'contactname not exist'})
+        return res.status(409).send({error: true, msg: 'Employee does not exist.'})
     }
 
-    //filter the contact data
-    const updateContact = existContacts.filter( contact => contact.mobile !== mobile )
+    //filter the employee data
+    const updateEmployee = existEmployees.filter( employee => employee.id !== id )
 
     //push the updated data
-    updateContact.push(contactData)
+    updateEmployee.push(employeeData)
 
     //finally save it
-    saveContactData(updateContact)
+    saveEmployeeData(updateEmployee)
 
-    res.send({success: true, msg: 'Contact data updated successfully'})
+    res.send({success: true, msg: 'Employee data updated successfully.'})
 })
 
 /* Delete - Delete method */
-app.delete('/contact/delete/:mobile', (req, res) => {
-    const mobile = req.params.mobile
+app.delete('/employee/delete/:id', (req, res) => {
+    const id = req.params.id
 
-    //get the existing contact data
-    const existContacts = getContactData()
+    //get the existing employee data
+    const existEmployees = getEmployeeData()
 
-    //filter the contact data to remove it
-    const filterContact = existContacts.filter( contact => contact.mobile !== mobile )
+    //filter the employee data to remove it
+    const filterEmployee = existEmployees.filter( employee => employee.id !== id )
 
-    if ( existContacts.length === filterContact.length ) {
-        return res.status(409).send({error: true, msg: 'Contact does not exist'})
+    if ( existEmployees.length === filterEmployee.length ) {
+        return res.status(409).send({error: true, msg: 'Employee does not exist.'})
     }
 
     //save the filtered data
-    saveContactData(filterContact)
+    saveEmployeeData(filterEmployee)
 
-    res.send({success: true, msg: 'Contact removed successfully'})
+    res.send({success: true, msg: 'Employee removed successfully.'})
 
 })
 
 
 /* util functions */
 
-//read the contact data from json file
-const saveContactData = (data) => {
+//read the employee data from json file
+const saveEmployeeData = (data) => {
     const stringifyData = JSON.stringify(data)
-    fs.writeFileSync('contacts.json', stringifyData)
+    fs.writeFileSync('employees.json', stringifyData)
 }
 
-//get the contact data from json file
-const getContactData = () => {
-    const jsonData = fs.readFileSync('contacts.json')
+//get the employee data from json file
+const getEmployeeData = () => {
+    const jsonData = fs.readFileSync('employees.json')
     return JSON.parse(jsonData)
 }
 
