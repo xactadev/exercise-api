@@ -1,3 +1,3 @@
-# exercise-api
+# Teloworks Frontend Development Exercise API
 
-Teloworks Frontend Development Exercise API
+
